@@ -7,13 +7,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
         body { font-family: 'Inter', Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: linear-gradient(180deg, #f0f7f0, #e8f5e8); color: #333; line-height: 1.7; }
-        h1 { font-family: 'Playfair Display', serif; color: #1e5c2b; text-align: center; font-size: 2.6em; }
-        .subtitle { text-align: center; font-size: 1.3em; color: #2e7d32; margin-bottom: 20px; }
+        h1 { font-family: 'Playfair Display', serif; color: #1e5c2b; text-align: center; font-size: 2.6em; margin-bottom: 8px; }
+        .subtitle { text-align: center; font-size: 1.3em; color: #2e7d32; margin-bottom: 25px; }
         .nav { text-align: center; margin: 25px 0; }
-        button { background: #2e7d32; color: white; padding: 14px 24px; border: none; border-radius: 50px; cursor: pointer; font-size: 1.05em; margin: 6px; }
-        button:hover { background: #1b5e20; }
-        .section { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
-        audio { width: 100%; margin: 10px 0; }
+        button { background: #2e7d32; color: white; padding: 14px 26px; border: none; border-radius: 50px; cursor: pointer; font-size: 1.1em; margin: 8px; box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
+        button:hover { background: #1b5e20; transform: translateY(-2px); }
+        .section { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        audio { width: 100%; margin: 12px 0; }
     </style>
 </head>
 <body>
@@ -29,21 +29,22 @@
     <!-- Thought of the Day -->
     <div class="section">
         <h2>💡 Thought of the Day</h2>
-        <p id="thought" style="font-style:italic; color:#1e5c2b;"></p>
+        <p id="thought" style="font-style:italic; color:#1e5c2b; font-size:1.1em;"></p>
     </div>
 
-    <!-- Audio Resources -->
+    <!-- Audio -->
     <div class="section">
         <h2>🎧 Helpful Audio</h2>
-        <p><strong>The Four Agreements</strong></p>
+        <p><strong>The Four Agreements - Key Ideas</strong></p>
         <audio controls>
             <source src="https://www.youtube.com/embed/0z4x1J5o0zA" type="audio/mpeg">
+            Your browser does not support audio.
         </audio>
-        <p><em>Don Miguel Ruiz - The Four Agreements (Summary / Key Ideas)</em></p>
         
-        <p><strong>Letting Go & Presence</strong> (Ryan's Lessons style)</p>
+        <p><strong>Letting Go & Presence</strong></p>
         <audio controls>
             <source src="https://www.youtube.com/embed/5q4t7p4f7zU" type="audio/mpeg">
+            Your browser does not support audio.
         </audio>
     </div>
 
@@ -51,24 +52,23 @@
         <label>Date</label>
         <input type="date" id="date" required>
         <label>What small miracle did I notice today?</label>
-        <textarea id="miracle" rows="3" placeholder="How did God show up?"></textarea>
+        <textarea id="miracle" rows="3" placeholder="How did God show up today?"></textarea>
         <label>What am I grateful for?</label>
-        <textarea id="gratitude" rows="3" placeholder="List 3+ things..."></textarea>
+        <textarea id="gratitude" rows="3" placeholder="List 3 or more things..."></textarea>
         <label>Reflection / Lesson</label>
-        <textarea id="reflection" rows="3" placeholder="Letting go, presence, faith..."></textarea>
-        <button type="button" onclick="saveEntry()" style="width:100%;">Save Entry</button>
+        <textarea id="reflection" rows="3" placeholder="What am I learning about presence, letting go, or faith?"></textarea>
+        <button type="button" onclick="saveEntry()" style="width:100%; margin-top:15px;">Save Entry</button>
     </form>
 
     <div id="entries" class="section"></div>
 
     <script>
-        // Thought of the Day
         const thoughts = [
-            "When you try to float, you sink. When you let go, you float. - Ryan",
+            "When you try to float, you sink. When you let go, you float.",
             "The real miracle might be loving myself enough to finally be present.",
             "Small miracles happen daily if we have eyes to see them.",
             "You are not your thoughts. Sit with them gently.",
-            "God answers needs, not always wants. Keep walking in faith."
+            "Keep walking in faith. God answers needs."
         ];
         document.getElementById('thought').textContent = thoughts[Math.floor(Math.random() * thoughts.length)];
 
@@ -86,32 +86,32 @@
             container.style.display = 'block';
             container.innerHTML = '<h2>My Entries</h2>';
             if (entries.length === 0) {
-                container.innerHTML += '<p>No entries yet. Start today!</p>';
+                container.innerHTML += '<p>No entries yet. Click "New Entry" to start.</p>';
                 return;
             }
             entries.sort((a,b) => new Date(b.date) - new Date(a.date));
             entries.forEach((entry, i) => {
                 const div = document.createElement('div');
-                div.style = 'background:white;padding:20px;border-radius:15px;margin-bottom:15px;border-left:6px solid #2e7d32;';
-                div.innerHTML = `<strong>${entry.date}</strong><br><br><strong>Miracle:</strong> ${entry.miracle}<br><br><strong>Gratitude:</strong> ${entry.gratitude}<br><br><strong>Reflection:</strong> ${entry.reflection||'—'}<br><button onclick="deleteEntry(${i})" style="background:#c62828;">Delete</button>`;
+                div.style = 'background:#f9f9f9;padding:20px;border-radius:15px;margin-bottom:15px;border-left:6px solid #2e7d32;';
+                div.innerHTML = `<strong>${entry.date}</strong><br><br><strong>Miracle:</strong> ${entry.miracle}<br><br><strong>Gratitude:</strong> ${entry.gratitude}<br><br><strong>Reflection:</strong> ${entry.reflection || '—'}<br><button onclick="deleteEntry(${i})" style="background:#c62828;margin-top:10px;">Delete</button>`;
                 container.appendChild(div);
             });
         }
 
-        function saveEntry() { /* same as before */ 
+        function saveEntry() {
             const date = document.getElementById('date').value;
             const miracle = document.getElementById('miracle').value.trim();
             const gratitude = document.getElementById('gratitude').value.trim();
-            if (!date || !miracle || !gratitude) return alert("Please fill main fields");
+            if (!date || !miracle || !gratitude) return alert("Please fill Date, Miracle, and Gratitude");
             entries.push({date, miracle, gratitude, reflection: document.getElementById('reflection').value.trim()});
             localStorage.setItem('miraclesEntries', JSON.stringify(entries));
-            alert("✅ Saved!");
+            alert("✅ Entry Saved!");
             document.getElementById('entryForm').reset();
             showEntries();
         }
 
         function deleteEntry(i) {
-            if (confirm("Delete?")) {
+            if (confirm("Delete this entry?")) {
                 entries.splice(i, 1);
                 localStorage.setItem('miraclesEntries', JSON.stringify(entries));
                 showEntries();
@@ -119,11 +119,13 @@
         }
 
         function exportBook() {
-            if (entries.length === 0) return alert("Add entries first!");
-            let html = `<h1>Book of Miracles</h1><p>${new Date().getFullYear()} Gratitude Journey</p><hr>`;
+            if (entries.length === 0) return alert("Add some entries first!");
+            let html = `<h1 style="text-align:center;">Book of Miracles</h1><p style="text-align:center;">${new Date().getFullYear()} Gratitude Journey</p><hr>`;
             entries.sort((a,b) => new Date(a.date) - new Date(b.date));
-            entries.forEach(e => html += `<h2>${e.date}</h2><p><strong>Miracle:</strong> ${e.miracle}</p><p><strong>Gratitude:</strong> ${e.gratitude}</p><p><strong>Reflection:</strong> ${e.reflection||'—'}</p><hr>`);
-            const blob = new Blob([html], {type:'text/html'});
+            entries.forEach(e => {
+                html += `<h2>${e.date}</h2><p><strong>Miracle:</strong> ${e.miracle}</p><p><strong>Gratitude:</strong> ${e.gratitude}</p><p><strong>Reflection:</strong> ${e.reflection || '—'}</p><hr>`;
+            });
+            const blob = new Blob([html], {type: 'text/html'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'My-Book-of-Miracles.html';
