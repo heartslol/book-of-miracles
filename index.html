@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book of Miracles</title>
+    <title>Lens of Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -234,13 +234,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>📖 Book of Miracles</h1>
-        <p class="subtitle">✨ Capture your daily miracles and gratitude ✨</p>
+        <h1>❤️ Lens of Love</h1>
+        <p class="subtitle">✨ Capture your daily moments of love ✨</p>
 
         <div class="button-group">
             <button class="btn-primary" onclick="newEntry()">✍️ New Entry</button>
             <button class="btn-secondary" onclick="viewEntries()">📚 My Entries</button>
-            <button class="btn-tertiary" onclick="exportBook()">📥 Export Book</button>
+            <button class="btn-tertiary" onclick="exportBook()">📥 Export</button>
         </div>
 
         <div id="main"></div>
@@ -255,13 +255,13 @@
                     <h2>New Entry</h2>
                     <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}">
                     
-                    <label>✨ Miracle Today</label>
-                    <textarea id="miracle" placeholder="What miracle blessed you today?"></textarea>
-                    <button class="btn-voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button>
+                    <label>❤️ Love Moment</label>
+                    <textarea id="miracle" placeholder="What moment of love touched your heart today?"></textarea>
+                    <button class="btn-voice" onclick="speakToText('miracle')">🎤 Speak</button>
                     
-                    <label>🙏 Gratitude</label>
-                    <textarea id="gratitude" placeholder="What are you grateful for?"></textarea>
-                    <button class="btn-voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button>
+                    <label>💕 Reflection</label>
+                    <textarea id="gratitude" placeholder="How did this moment make you feel?"></textarea>
+                    <button class="btn-voice" onclick="speakToText('gratitude')">🎤 Speak</button>
                     
                     <button class="save-btn" onclick="saveEntry()">💾 Save Entry</button>
                 </div>
@@ -295,16 +295,16 @@
         function viewEntries() {
             let html = `<div class="card"><h2>My Entries</h2>`;
             if (entries.length === 0) {
-                html += `<div class="empty-state">📝 No entries yet. Start recording your miracles!</div>`;
+                html += `<div class="empty-state">📝 No entries yet. Start capturing moments of love!</div>`;
             } else {
                 entries.sort((a,b) => new Date(b.date) - new Date(a.date));
                 entries.forEach((e, i) => {
                     html += `
                         <div class="entry-item">
                             <div class="entry-date">📅 ${e.date}</div>
-                            <div class="entry-label">✨ Miracle</div>
+                            <div class="entry-label">❤️ Love Moment</div>
                             <div class="entry-text">${e.miracle || '<em>No entry</em>'}</div>
-                            <div class="entry-label">🙏 Gratitude</div>
+                            <div class="entry-label">💕 Reflection</div>
                             <div class="entry-text">${e.gratitude || '<em>No entry</em>'}</div>
                             <button class="delete-btn" onclick="deleteEntry(${i})">🗑️ Delete</button>
                         </div>
@@ -325,16 +325,16 @@
 
         function exportBook() {
             if (entries.length === 0) return alert("📖 No entries to export yet");
-            let text = "Book of Miracles\n" + "=".repeat(50) + "\n\n";
+            let text = "Lens of Love\n" + "=".repeat(50) + "\n\n";
             entries.forEach(e => {
                 text += `Date: ${e.date}\n`;
-                text += `Miracle: ${e.miracle}\n`;
-                text += `Gratitude: ${e.gratitude}\n`;
+                text += `Love Moment: ${e.miracle}\n`;
+                text += `Reflection: ${e.gratitude}\n`;
                 text += "-".repeat(50) + "\n\n";
             });
             const a = document.createElement("a");
             a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
-            a.download = "My-Book-of-Miracles.txt";
+            a.download = "My-Lens-of-Love.txt";
             a.click();
         }
 
