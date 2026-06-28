@@ -263,6 +263,10 @@
                     <textarea id="gratitude" placeholder="What miracle have I noticed today?"></textarea>
                     <button class="btn-voice" onclick="speakToText('gratitude')">🎤 Speak</button>
                     
+                    <label>💡 AHA moments (change in perspective)</label>
+                    <textarea id="aha" placeholder="What new perspective or realization did I have today?"></textarea>
+                    <button class="btn-voice" onclick="speakToText('aha')">🎤 Speak</button>
+                    
                     <button class="save-btn" onclick="saveEntry()">💾 Save Entry</button>
                 </div>
             `;
@@ -284,8 +288,9 @@
             const date = document.getElementById("date").value;
             const miracle = document.getElementById("miracle").value.trim();
             const gratitude = document.getElementById("gratitude").value.trim();
-            if (miracle || gratitude) {
-                entries.push({date, miracle, gratitude});
+            const aha = document.getElementById("aha").value.trim();
+            if (miracle || gratitude || aha) {
+                entries.push({date, miracle, gratitude, aha});
                 localStorage.setItem("miracles", JSON.stringify(entries));
                 alert("✅ Entry saved!");
                 viewEntries();
@@ -306,6 +311,8 @@
                             <div class="entry-text">${e.miracle || '<em>No entry</em>'}</div>
                             <div class="entry-label">✨ Have I noticed a miracle?</div>
                             <div class="entry-text">${e.gratitude || '<em>No entry</em>'}</div>
+                            <div class="entry-label">💡 AHA moments</div>
+                            <div class="entry-text">${e.aha || '<em>No entry</em>'}</div>
                             <button class="delete-btn" onclick="deleteEntry(${i})">🗑️ Delete</button>
                         </div>
                     `;
@@ -330,6 +337,7 @@
                 text += `Date: ${e.date}\n`;
                 text += `What am I grateful for?: ${e.miracle}\n`;
                 text += `Have I noticed a miracle?: ${e.gratitude}\n`;
+                text += `AHA moments: ${e.aha}\n`;
                 text += "-".repeat(50) + "\n\n";
             });
             const a = document.createElement("a");
