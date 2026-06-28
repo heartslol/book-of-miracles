@@ -6,57 +6,15 @@
     <title>Book of Miracles</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
-        body { 
-            font-family: 'Inter', Arial, sans-serif; 
-            max-width: 900px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            background: linear-gradient(180deg, #f0f7f0, #e8f5e8); 
-            color: #333; 
-            line-height: 1.7;
-        }
-        h1 { 
-            font-family: 'Playfair Display', serif;
-            color: #1e5c2b; 
-            text-align: center; 
-            font-size: 2.8em;
-            margin-bottom: 8px;
-        }
+        body { font-family: 'Inter', Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: linear-gradient(180deg, #f0f7f0, #e8f5e8); color: #333; line-height: 1.7; }
+        h1 { font-family: 'Playfair Display', serif; color: #1e5c2b; text-align: center; font-size: 2.8em; margin-bottom: 8px; }
         p.subtitle { text-align: center; font-size: 1.3em; color: #2e7d32; margin-bottom: 30px; }
         .nav { text-align: center; margin: 30px 0; }
-        button { 
-            background: #2e7d32; 
-            color: white; 
-            padding: 16px 28px; 
-            border: none; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-size: 1.1em;
-            margin: 8px;
-            box-shadow: 0 4px 12px rgba(46,125,50,0.3);
-        }
+        button { background: #2e7d32; color: white; padding: 16px 28px; border: none; border-radius: 50px; cursor: pointer; font-size: 1.1em; margin: 8px; box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
         button:hover { background: #1b5e20; transform: translateY(-2px); }
-        form, .entry { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            margin-bottom: 25px;
-        }
-        label { 
-            display: block; 
-            margin: 22px 0 10px; 
-            font-weight: 500; 
-            color: #1e5c2b;
-            font-size: 1.1em;
-        }
-        input, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            border: 2px solid #ddd; 
-            border-radius: 12px; 
-            font-size: 1.05em;
-        }
+        form, .entry { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        label { display: block; margin: 22px 0 10px; font-weight: 500; color: #1e5c2b; font-size: 1.1em; }
+        input, textarea { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-size: 1.05em; }
         textarea { resize: vertical; }
         .entry { border-left: 8px solid #2e7d32; }
     </style>
@@ -74,16 +32,12 @@
     <form id="entryForm" style="display:none;">
         <label>Date</label>
         <input type="date" id="date" required>
-        
         <label>What small miracle did I notice today?</label>
         <textarea id="miracle" rows="4" placeholder="How did God show up today?"></textarea>
-        
         <label>What am I grateful for?</label>
         <textarea id="gratitude" rows="4" placeholder="List everything..."></textarea>
-        
         <label>Reflection / Lesson</label>
         <textarea id="reflection" rows="4" placeholder="What am I learning about presence, letting go, or faith?"></textarea>
-        
         <button type="button" onclick="saveEntry()" style="width:100%; margin-top:15px;">Save Entry</button>
     </form>
 
@@ -98,13 +52,13 @@
             document.getElementById('date').value = new Date().toISOString().split('T')[0];
         }
         
-        function showEntries() { /* same as before - I'll keep it short */ 
+        function showEntries() {
             document.getElementById('entryForm').style.display = 'none';
             const container = document.getElementById('entries');
             container.style.display = 'block';
             container.innerHTML = '<h2 style="text-align:center;">My Book of Miracles</h2>';
             if (entries.length === 0) {
-                container.innerHTML += '<p style="text-align:center;">No entries yet. Start writing!</p>';
+                container.innerHTML += '<p style="text-align:center;">No entries yet. Click "New Entry" above.</p>';
                 return;
             }
             entries.sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -123,13 +77,13 @@
             if (!date || !miracle || !gratitude) return alert("Please fill the main fields");
             entries.push({date, miracle, gratitude, reflection: document.getElementById('reflection').value.trim()});
             localStorage.setItem('miraclesEntries', JSON.stringify(entries));
-            alert("✅ Saved beautifully!");
+            alert("✅ Saved!");
             document.getElementById('entryForm').reset();
             showEntries();
         }
         
         function deleteEntry(i) {
-            if (confirm("Delete?")) {
+            if (confirm("Delete this entry?")) {
                 entries.splice(i, 1);
                 localStorage.setItem('miraclesEntries', JSON.stringify(entries));
                 showEntries();
@@ -138,7 +92,7 @@
         
         function exportBook() {
             if (entries.length === 0) return alert("Add entries first!");
-            let html = `<h1 style="text-align:center;color:#1e5c2b">Book of Miracles</h1><p style="text-align:center">${new Date().getFullYear()} — A Gratitude Journey</p><hr>`;
+            let html = `<h1 style="text-align:center;color:#1e5c2b">Book of Miracles</h1><p style="text-align:center">${new Date().getFullYear()} Gratitude Journey</p><hr>`;
             entries.sort((a,b) => new Date(a.date) - new Date(b.date));
             entries.forEach(e => html += `<h2>${e.date}</h2><p><strong>Miracle:</strong> ${e.miracle}</p><p><strong>Gratitude:</strong> ${e.gratitude}</p><p><strong>Reflection:</strong> ${e.reflection||'—'}</p><hr>`);
             const blob = new Blob([html], {type:'text/html'});
