@@ -255,12 +255,12 @@
                     <h2>New Entry</h2>
                     <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}">
                     
-                    <label>❤️ Love Moment</label>
-                    <textarea id="miracle" placeholder="What moment of love touched your heart today?"></textarea>
+                    <label>🙏 What am I grateful for?</label>
+                    <textarea id="miracle" placeholder="What am I grateful for today?"></textarea>
                     <button class="btn-voice" onclick="speakToText('miracle')">🎤 Speak</button>
                     
-                    <label>💕 Reflection</label>
-                    <textarea id="gratitude" placeholder="How did this moment make you feel?"></textarea>
+                    <label>✨ Have I noticed a miracle?</label>
+                    <textarea id="gratitude" placeholder="What miracle have I noticed today?"></textarea>
                     <button class="btn-voice" onclick="speakToText('gratitude')">🎤 Speak</button>
                     
                     <button class="save-btn" onclick="saveEntry()">💾 Save Entry</button>
@@ -302,9 +302,9 @@
                     html += `
                         <div class="entry-item">
                             <div class="entry-date">📅 ${e.date}</div>
-                            <div class="entry-label">❤️ Love Moment</div>
+                            <div class="entry-label">🙏 What am I grateful for?</div>
                             <div class="entry-text">${e.miracle || '<em>No entry</em>'}</div>
-                            <div class="entry-label">💕 Reflection</div>
+                            <div class="entry-label">✨ Have I noticed a miracle?</div>
                             <div class="entry-text">${e.gratitude || '<em>No entry</em>'}</div>
                             <button class="delete-btn" onclick="deleteEntry(${i})">🗑️ Delete</button>
                         </div>
@@ -328,8 +328,8 @@
             let text = "Lens of Love\n" + "=".repeat(50) + "\n\n";
             entries.forEach(e => {
                 text += `Date: ${e.date}\n`;
-                text += `Love Moment: ${e.miracle}\n`;
-                text += `Reflection: ${e.gratitude}\n`;
+                text += `What am I grateful for?: ${e.miracle}\n`;
+                text += `Have I noticed a miracle?: ${e.gratitude}\n`;
                 text += "-".repeat(50) + "\n\n";
             });
             const a = document.createElement("a");
