@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Book of Miracles</title>
+  <title>Lens of Love</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
@@ -238,7 +238,7 @@
   <div class="container">
     <header>
       <div class="brand">
-        <h1>Book of Miracles</h1>
+        <h1>Lens of Love</h1>
       </div>
 
       <nav aria-label="Main navigation">
@@ -252,13 +252,13 @@
     <div class="actions">
       <button class="btn" onclick="newEntry()">New Entry</button>
       <button class="btn" onclick="viewEntries()">My Entries</button>
-      <button class="btn" onclick="exportBook()">Export Book</button>
+      <button class="btn" onclick="exportBook()">Export</button>
     </div>
 
     <div id="main"></div>
 
     <footer>
-      © <span id="year"></span> Book of Miracles. All rights reserved.
+      © <span id="year"></span> Lens of Love. All rights reserved.
     </footer>
   </div>
 
@@ -272,7 +272,7 @@
         <div class="card">
           <h2 style="margin-top:0;">About</h2>
           <p style="color:var(--muted);line-height:1.6;">
-            Book of Miracles is a personal place to collect daily miracles and gratitude.
+            Lens of Love is a personal place to collect daily miracles, gratitude, and aha moments (perspective).
             Use "New Entry" to add a memory, "My Entries" to browse them in a gallery, and Export to download a text copy.
           </p>
         </div>
@@ -308,6 +308,13 @@
             <button class="btn" onclick="document.getElementById('gratitude').value=''">Clear</button>
           </div>
 
+          <label for="aha" style="margin-top:14px;">Aha Moment (Perspective)</label>
+          <textarea id="aha" placeholder="A shift in perspective, insight, or 'aha'..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('aha')">🎤 Speak Aha</button>
+            <button class="btn" onclick="document.getElementById('aha').value=''">Clear</button>
+          </div>
+
           <div style="margin-top:18px;display:flex;gap:12px;">
             <button class="btn" style="flex:1" onclick="saveEntry()">Save Entry</button>
             <button class="btn" style="flex:1" onclick="viewEntries()">View Gallery</button>
@@ -338,12 +345,13 @@
       const date = document.getElementById("date").value;
       const miracle = document.getElementById("miracle").value.trim();
       const gratitude = document.getElementById("gratitude").value.trim();
-      if (!(miracle || gratitude)) {
-        alert("Add a Miracle or Gratitude before saving.");
+      const aha = document.getElementById("aha").value.trim();
+      if (!(miracle || gratitude || aha)) {
+        alert("Add a Miracle, Gratitude, or Aha moment before saving.");
         return;
       }
       // push to top
-      entries.unshift({date, miracle, gratitude});
+      entries.unshift({date, miracle, gratitude, aha});
       localStorage.setItem("miracles", JSON.stringify(entries));
       alert("Saved!");
       viewEntries();
@@ -353,7 +361,7 @@
       let html = `<div class="card"><h2 style="margin-top:0;">My Entries</h2>`;
 
       if (entries.length === 0) {
-        html += `<div class="empty" style="padding:36px;">No entries yet — create your first miracle.</div></div>`;
+        html += `<div class="empty" style="padding:36px;">No entries yet — create your first moment.</div></div>`;
         document.getElementById("main").innerHTML = html;
         return;
       }
@@ -363,8 +371,8 @@
       entries.forEach((e, i) => {
         // Use a soft placeholder background from picsum; you can replace with user image later
         const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-' + i)}`;
-        const safeTitle = escapeHtml(truncate(e.miracle || e.gratitude || "A small miracle", 40));
-        const safeSubtitle = escapeHtml(truncate(e.gratitude || e.miracle || "", 80));
+        const safeTitle = escapeHtml(truncate(e.miracle || e.aha || e.gratitude || "A small moment", 40));
+        const safeSubtitle = escapeHtml(truncate(e.aha || e.gratitude || e.miracle || "", 80));
         html += `
           <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
             <button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button>
@@ -386,7 +394,7 @@
 
     function escapeHtml(s){
       if(!s) return "";
-      return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
+      return String(s).replace(/[&<>\"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m];});
     }
 
     function showDetail(i){
@@ -396,7 +404,7 @@
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
             <div>
-              <h2 style="margin:0 0 6px 0;">${escapeHtml(e.miracle || 'A quiet miracle')}</h2>
+              <h2 style="margin:0 0 6px 0;">${escapeHtml(e.miracle || 'A quiet moment')}</h2>
               <div style="color:var(--muted);font-size:14px">${e.date}</div>
             </div>
             <div>
@@ -408,6 +416,9 @@
           <div style="margin-top:16px;color:var(--muted);line-height:1.6;">
             <h3 style="margin:0 0 8px 0;">Gratitude</h3>
             <p style="margin:0 0 16px 0;">${escapeHtml(e.gratitude || '')}</p>
+
+            <h3 style="margin:0 0 8px 0;">Aha Moment (Perspective)</h3>
+            <p style="margin:0 0 16px 0;">${escapeHtml(e.aha || '')}</p>
           </div>
         </div>
       `;
@@ -422,11 +433,11 @@
 
     function exportBook() {
       if (entries.length === 0) return alert("No entries");
-      let text = "Book of Miracles\n\n";
-      entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\n\n`);
+      let text = "Lens of Love\n\n";
+      entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\nAha: ${e.aha}\n\n`);
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
-      a.download = "My-Book-of-Miracles.txt";
+      a.download = "My-Lens-of-Love.txt";
       a.click();
     }
 
