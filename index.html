@@ -401,7 +401,7 @@
     let entries = [];
 
     // Simple in-browser user system (uses localStorage)
-    const users = JSON.parse(localStorage.getItem("users")) || {};
+    let users = JSON.parse(localStorage.getItem("users")) || {};
 
     function hashPassword(pwd) {
       // Simple hash for demo (NOT secure for production - use backend auth!)
@@ -660,7 +660,7 @@
       }
       entries.unshift({date, miracle, gratitude, aha});
       saveUserEntries();
-      alert("Saved!");
+      alert("Entry saved successfully!");
       viewEntries();
     }
 
