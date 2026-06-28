@@ -3,278 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lens of Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Book of Miracles</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: white;
-            text-align: center;
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .subtitle {
-            text-align: center;
-            color: rgba(255,255,255,0.9);
-            font-size: 16px;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 14px 28px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #f093fb;
-            color: white;
-        }
-
-        .btn-tertiary {
-            background: #4facfe;
-            color: white;
-        }
-
-        .btn-voice {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            color: white;
-            font-size: 18px;
-            padding: 12px 20px;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .card h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-family: 'Playfair Display', serif;
-            font-size: 2em;
-        }
-
-        label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="date"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            resize: vertical;
-            transition: border-color 0.3s ease;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea::placeholder {
-            color: #999;
-        }
-
-        .save-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 16px;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        .entry-item {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .entry-date {
-            color: #667eea;
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .entry-label {
-            color: #764ba2;
-            font-weight: 600;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-
-        .entry-text {
-            color: #333;
-            margin-top: 5px;
-            line-height: 1.6;
-        }
-
-        .delete-btn {
-            background: #ff6b6b;
-            color: white;
-            padding: 8px 16px;
-            margin-top: 12px;
-            font-size: 14px;
-            width: 100%;
-        }
-
-        .delete-btn:hover {
-            background: #ff5252;
-        }
-
-        hr {
-            margin: 20px 0;
-            border: none;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #999;
-            padding: 40px 20px;
-            font-size: 18px;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .button-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            button {
-                width: 100%;
-            }
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f0f7f0; }
+        h1 { color: #2e7d32; text-align: center; }
+        button { padding: 15px 25px; margin: 10px; font-size: 18px; background: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .voice { background: #007bff; font-size: 20px; padding: 12px 20px; }
+        textarea { width: 100%; height: 100px; padding: 12px; font-size: 18px; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>❤️ Lens of Love</h1>
-        <p class="subtitle">✨ Capture your daily moments of love ✨</p>
+    <h1>📖 Book of Miracles</h1>
 
-        <div class="button-group">
-            <button class="btn-primary" onclick="newEntry()">✍️ New Entry</button>
-            <button class="btn-secondary" onclick="viewEntries()">📚 My Entries</button>
-            <button class="btn-tertiary" onclick="exportBook()">📥 Export</button>
-        </div>
-
-        <div id="main"></div>
+    <div style="text-align:center;">
+        <button onclick="newEntry()">New Entry</button>
+        <button onclick="viewEntries()">My Entries</button>
+        <button onclick="exportBook()">Export Book</button>
     </div>
+
+    <div id="main"></div>
 
     <script>
         let entries = JSON.parse(localStorage.getItem("miracles")) || [];
 
         function newEntry() {
             document.getElementById("main").innerHTML = `
-                <div class="card">
-                    <h2>New Entry</h2>
-                    <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}">
-                    
-                    <label>🙏 What am I grateful for?</label>
-                    <textarea id="miracle" placeholder="What am I grateful for today?"></textarea>
-                    <button class="btn-voice" onclick="speakToText('miracle')">🎤 Speak</button>
-                    
-                    <label>✨ Have I noticed a miracle?</label>
-                    <textarea id="gratitude" placeholder="What miracle have I noticed today?"></textarea>
-                    <button class="btn-voice" onclick="speakToText('gratitude')">🎤 Speak</button>
-                    
-                    <label>💡 AHA moments (change in perspective)</label>
-                    <textarea id="aha" placeholder="What new perspective or realization did I have today?"></textarea>
-                    <button class="btn-voice" onclick="speakToText('aha')">🎤 Speak</button>
-                    
-                    <button class="save-btn" onclick="saveEntry()">💾 Save Entry</button>
+                <div style="background:white;padding:25px;border-radius:12px;margin:20px 0;">
+                    <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}" style="width:100%;padding:10px;"><br><br>
+                    <label>Miracle Today</label>
+                    <textarea id="miracle" placeholder="Type or speak..."></textarea>
+                    <button class="voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button><br><br>
+                    <label>Gratitude</label>
+                    <textarea id="gratitude" placeholder="Type or speak..."></textarea>
+                    <button class="voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button><br><br>
+                    <button onclick="saveEntry()" style="width:100%;">Save Entry</button>
                 </div>
             `;
         }
 
         function speakToText(fieldId) {
             if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-                alert("🎤 Voice to text works best in Chrome on your phone or computer.");
+                alert("Voice to text works best in Chrome on your phone or computer.");
                 return;
             }
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -288,34 +57,21 @@
             const date = document.getElementById("date").value;
             const miracle = document.getElementById("miracle").value.trim();
             const gratitude = document.getElementById("gratitude").value.trim();
-            const aha = document.getElementById("aha").value.trim();
-            if (miracle || gratitude || aha) {
-                entries.push({date, miracle, gratitude, aha});
+            if (miracle || gratitude) {
+                entries.push({date, miracle, gratitude});
                 localStorage.setItem("miracles", JSON.stringify(entries));
-                alert("✅ Entry saved!");
+                alert("Saved!");
                 viewEntries();
             }
         }
 
         function viewEntries() {
-            let html = `<div class="card"><h2>My Entries</h2>`;
-            if (entries.length === 0) {
-                html += `<div class="empty-state">📝 No entries yet. Start capturing moments of love!</div>`;
-            } else {
+            let html = `<div style="background:white;padding:25px;border-radius:12px;margin:20px 0;"><h2>My Entries</h2>`;
+            if (entries.length === 0) html += "<p>No entries yet.</p>";
+            else {
                 entries.sort((a,b) => new Date(b.date) - new Date(a.date));
                 entries.forEach((e, i) => {
-                    html += `
-                        <div class="entry-item">
-                            <div class="entry-date">📅 ${e.date}</div>
-                            <div class="entry-label">🙏 What am I grateful for?</div>
-                            <div class="entry-text">${e.miracle || '<em>No entry</em>'}</div>
-                            <div class="entry-label">✨ Have I noticed a miracle?</div>
-                            <div class="entry-text">${e.gratitude || '<em>No entry</em>'}</div>
-                            <div class="entry-label">💡 AHA moments</div>
-                            <div class="entry-text">${e.aha || '<em>No entry</em>'}</div>
-                            <button class="delete-btn" onclick="deleteEntry(${i})">🗑️ Delete</button>
-                        </div>
-                    `;
+                    html += `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="deleteEntry(${i})">Delete</button><hr>`;
                 });
             }
             html += `</div>`;
@@ -323,7 +79,7 @@
         }
 
         function deleteEntry(i) {
-            if (confirm("Delete this entry?")) {
+            if (confirm("Delete?")) {
                 entries.splice(i, 1);
                 localStorage.setItem("miracles", JSON.stringify(entries));
                 viewEntries();
@@ -331,18 +87,12 @@
         }
 
         function exportBook() {
-            if (entries.length === 0) return alert("📖 No entries to export yet");
-            let text = "Lens of Love\n" + "=".repeat(50) + "\n\n";
-            entries.forEach(e => {
-                text += `Date: ${e.date}\n`;
-                text += `What am I grateful for?: ${e.miracle}\n`;
-                text += `Have I noticed a miracle?: ${e.gratitude}\n`;
-                text += `AHA moments: ${e.aha}\n`;
-                text += "-".repeat(50) + "\n\n";
-            });
+            if (entries.length === 0) return alert("No entries");
+            let text = "Book of Miracles\n\n";
+            entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\n\n`);
             const a = document.createElement("a");
             a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
-            a.download = "My-Lens-of-Love.txt";
+            a.download = "My-Book-of-Miracles.txt";
             a.click();
         }
 
