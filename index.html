@@ -92,4 +92,45 @@
             entries.sort((a,b) => new Date(b.date) - new Date(a.date));
             entries.forEach((entry, i) => {
                 const div = document.createElement('div');
-                div.style =
+                div.style = 'background:white;padding:20px;border-radius:15px;margin-bottom:15px;border-left:6px solid #2e7d32;';
+                div.innerHTML = `<strong>${entry.date}</strong><br><br><strong>Miracle:</strong> ${entry.miracle}<br><br><strong>Gratitude:</strong> ${entry.gratitude}<br><br><strong>Reflection:</strong> ${entry.reflection||'—'}<br><button onclick="deleteEntry(${i})" style="background:#c62828;">Delete</button>`;
+                container.appendChild(div);
+            });
+        }
+
+        function saveEntry() { /* same as before */ 
+            const date = document.getElementById('date').value;
+            const miracle = document.getElementById('miracle').value.trim();
+            const gratitude = document.getElementById('gratitude').value.trim();
+            if (!date || !miracle || !gratitude) return alert("Please fill main fields");
+            entries.push({date, miracle, gratitude, reflection: document.getElementById('reflection').value.trim()});
+            localStorage.setItem('miraclesEntries', JSON.stringify(entries));
+            alert("✅ Saved!");
+            document.getElementById('entryForm').reset();
+            showEntries();
+        }
+
+        function deleteEntry(i) {
+            if (confirm("Delete?")) {
+                entries.splice(i, 1);
+                localStorage.setItem('miraclesEntries', JSON.stringify(entries));
+                showEntries();
+            }
+        }
+
+        function exportBook() {
+            if (entries.length === 0) return alert("Add entries first!");
+            let html = `<h1>Book of Miracles</h1><p>${new Date().getFullYear()} Gratitude Journey</p><hr>`;
+            entries.sort((a,b) => new Date(a.date) - new Date(b.date));
+            entries.forEach(e => html += `<h2>${e.date}</h2><p><strong>Miracle:</strong> ${e.miracle}</p><p><strong>Gratitude:</strong> ${e.gratitude}</p><p><strong>Reflection:</strong> ${e.reflection||'—'}</p><hr>`);
+            const blob = new Blob([html], {type:'text/html'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'My-Book-of-Miracles.html';
+            a.click();
+        }
+
+        window.onload = showForm;
+    </script>
+</body>
+</html>
