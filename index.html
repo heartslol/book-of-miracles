@@ -226,6 +226,18 @@
       opacity:0.9;
     }
 
+    /* AHA badge */
+    .badge-aha {
+      display:inline-block;
+      background: rgba(200,77,77,0.95);
+      color:white;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:12px;
+      margin-left:8px;
+      vertical-align:middle;
+    }
+
     /* Responsive adjustments */
     @media (max-width:640px){
       .brand h1{ font-size:44px; }
@@ -244,6 +256,7 @@
       <nav aria-label="Main navigation">
         <a href="#" onclick="newEntry();return false;">Home</a>
         <a href="#" onclick="viewEntries();return false;">Gallery</a>
+        <a href="#" onclick="viewAhaEntries();return false;">AHA Moments</a>
         <a href="#" onclick="about();return false;">About</a>
         <a href="#" onclick="contact();return false;">Contact</a>
       </nav>
@@ -252,6 +265,7 @@
     <div class="actions">
       <button class="btn" onclick="newEntry()">New Entry</button>
       <button class="btn" onclick="viewEntries()">My Entries</button>
+      <button class="btn" onclick="viewAhaEntries()">AHA Moments</button>
       <button class="btn" onclick="exportBook()">Export</button>
     </div>
 
@@ -377,7 +391,38 @@
           <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
             <button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button>
             <div class="meta" onclick="showDetail(${i})">
-              <div class="title">${safeTitle}</div>
+              <div class="title">${safeTitle}${e.aha ? '<span class="badge-aha">AHA</span>' : ''}</div>
+              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+      document.getElementById("main").innerHTML = html;
+    }
+
+    function viewAhaEntries() {
+      let ahaEntries = entries.filter(e => (e.aha || '').trim());
+      let html = `<div class="card"><h2 style="margin-top:0;">AHA Moments (Perspective)</h2>`;
+
+      if (ahaEntries.length === 0) {
+        html += `<div class="empty" style="padding:36px;">No AHA moments yet — create one with New Entry.</div></div>`;
+        document.getElementById("main").innerHTML = html;
+        return;
+      }
+
+      html += `<div class="gallery">`;
+      ahaEntries.forEach((e, idx) => {
+        // compute original index for delete/showDetail mapping
+        const originalIndex = entries.indexOf(e);
+        const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-aha-' + idx)}`;
+        const safeTitle = escapeHtml(truncate(e.aha || e.miracle || e.gratitude || "An insight", 40));
+        const safeSubtitle = escapeHtml(truncate(e.miracle || e.gratitude || '', 80));
+        html += `
+          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
+            <button class="delete" onclick="deleteEntry(${originalIndex});event.stopPropagation();">Delete</button>
+            <div class="meta" onclick="showDetail(${originalIndex})">
+              <div class="title">${safeTitle}<span class="badge-aha">AHA</span></div>
               <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
             </div>
           </div>
@@ -405,7 +450,7 @@
           <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
             <div>
               <h2 style="margin:0 0 6px 0;">${escapeHtml(e.miracle || 'A quiet moment')}</h2>
-              <div style="color:var(--muted);font-size:14px">${e.date}</div>
+              <div style="color:var(--muted);font-size:14px">${e.date}${e.aha ? ' · AHA' : ''}</div>
             </div>
             <div>
               <button class="btn" onclick="viewEntries()">Back</button>
