@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book of Miracles</title>
     <style>
-        body { font-family: 'Georgia', serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f0f7f0; color: #333; line-height: 1.6; }
-        h1 { color: #2e7d32; text-align: center; font-size: 2.5em; }
-        button { background: #2e7d32; color: white; padding: 12px 20px; border: none; border-radius: 8px; margin: 8px; cursor: pointer; font-size: 17px; }
-        button:hover { background: #1b5e20; }
-        .voice-btn { background: #007bff; }
-        textarea { width: 100%; padding: 12px; font-size: 18px; border-radius: 8px; border: 1px solid #ccc; margin: 8px 0; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f0f7f0; }
+        h1 { color: #2e7d32; text-align: center; }
+        button { padding: 15px 25px; margin: 10px; font-size: 18px; background: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .voice { background: #007bff; font-size: 20px; padding: 12px 20px; }
+        textarea { width: 100%; height: 100px; padding: 12px; font-size: 18px; margin: 10px 0; }
     </style>
 </head>
 <body>
     <h1>📖 Book of Miracles</h1>
-    <p style="text-align:center;">Speak or type your gratitude</p>
 
     <div style="text-align:center;">
-        <button onclick="newEntry()">✍️ New Entry</button>
-        <button onclick="viewEntries()">📖 My Entries</button>
-        <button onclick="exportBook()">📤 Export Book</button>
+        <button onclick="newEntry()">New Entry</button>
+        <button onclick="viewEntries()">My Entries</button>
+        <button onclick="exportBook()">Export Book</button>
     </div>
 
     <div id="main"></div>
@@ -30,26 +28,27 @@
 
         function newEntry() {
             document.getElementById("main").innerHTML = `
-                <div style="background:white;padding:25px;border-radius:12px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-                    <input type="date" id="date" style="width:100%;padding:10px;font-size:18px;" value="${new Date().toISOString().split('T')[0]}"><br><br>
+                <div style="background:white;padding:25px;border-radius:12px;margin:20px 0;">
+                    <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}" style="width:100%;padding:10px;"><br><br>
                     <label>Miracle Today</label>
-                    <textarea id="miracle" rows="4" placeholder="Speak or type..."></textarea>
-                    <button class="voice-btn" onclick="startVoice('miracle')">🎤 Speak Miracle</button><br><br>
+                    <textarea id="miracle" placeholder="Type or speak..."></textarea>
+                    <button class="voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button><br><br>
                     <label>Gratitude</label>
-                    <textarea id="gratitude" rows="4" placeholder="Speak or type..."></textarea>
-                    <button class="voice-btn" onclick="startVoice('gratitude')">🎤 Speak Gratitude</button><br><br>
-                    <button onclick="saveEntry()" style="width:100%;padding:15px;">Save Entry</button>
+                    <textarea id="gratitude" placeholder="Type or speak..."></textarea>
+                    <button class="voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button><br><br>
+                    <button onclick="saveEntry()" style="width:100%;">Save Entry</button>
                 </div>
             `;
         }
 
-        function startVoice(field) {
+        function speakToText(fieldId) {
             if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-                return alert("Voice input not supported on this browser. Try Chrome.");
+                alert("Voice to text works best in Chrome on your phone or computer.");
+                return;
             }
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.onresult = function(event) {
-                document.getElementById(field).value = event.results[0][0].transcript;
+            recognition.onresult = (event) => {
+                document.getElementById(fieldId).value = event.results[0][0].transcript;
             };
             recognition.start();
         }
@@ -61,18 +60,18 @@
             if (miracle || gratitude) {
                 entries.push({date, miracle, gratitude});
                 localStorage.setItem("miracles", JSON.stringify(entries));
-                alert("✅ Saved!");
+                alert("Saved!");
                 viewEntries();
             }
         }
 
         function viewEntries() {
-            let html = `<div style="background:white;padding:25px;border-radius:12px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);"><h2>My Entries</h2>`;
+            let html = `<div style="background:white;padding:25px;border-radius:12px;margin:20px 0;"><h2>My Entries</h2>`;
             if (entries.length === 0) html += "<p>No entries yet.</p>";
             else {
                 entries.sort((a,b) => new Date(b.date) - new Date(a.date));
                 entries.forEach((e, i) => {
-                    html += `<p><strong>${e.date}</strong><br><strong>Miracle:</strong> ${e.miracle}<br><strong>Gratitude:</strong> ${e.gratitude}</p><button onclick="deleteEntry(${i})">Delete</button><hr>`;
+                    html += `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="deleteEntry(${i})">Delete</button><hr>`;
                 });
             }
             html += `</div>`;
@@ -91,9 +90,8 @@
             if (entries.length === 0) return alert("No entries");
             let text = "Book of Miracles\n\n";
             entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\n\n`);
-            const blob = new Blob([text], {type: "text/plain"});
             const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
+            a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
             a.download = "My-Book-of-Miracles.txt";
             a.click();
         }
