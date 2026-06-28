@@ -1,138 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book of Miracles</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
-        body { font-family: 'Inter', Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: linear-gradient(180deg, #f0f7f0, #e8f5e8); color: #333; line-height: 1.7; }
-        h1 { font-family: 'Playfair Display', serif; color: #1e5c2b; text-align: center; font-size: 2.6em; margin-bottom: 8px; }
-        .subtitle { text-align: center; font-size: 1.3em; color: #2e7d32; margin-bottom: 25px; }
-        .nav { text-align: center; margin: 25px 0; }
-        button { background: #2e7d32; color: white; padding: 14px 26px; border: none; border-radius: 50px; cursor: pointer; font-size: 1.1em; margin: 8px; box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
-        button:hover { background: #1b5e20; transform: translateY(-2px); }
-        .section { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        audio { width: 100%; margin: 12px 0; }
+        body { font-family: Arial; text-align: center; padding: 20px; background: #f0f7f0; }
+        button { padding: 15px 25px; margin: 10px; font-size: 18px; background: #2e7d32; color: white; border: none; border-radius: 10px; }
+        button:hover { background: #1b5e20; }
     </style>
 </head>
 <body>
     <h1>📖 Book of Miracles</h1>
-    <p class="subtitle">Daily Gratitude & Small Miracles • One day at a time</p>
+    <p>Daily Gratitude Journal</p>
 
-    <div class="nav">
-        <button onclick="showForm()">✍️ New Entry</button>
-        <button onclick="showEntries()">📖 My Entries</button>
-        <button onclick="exportBook()">📤 Export Book</button>
+    <button onclick="newEntry()">✍️ New Entry</button>
+    <button onclick="viewEntries()">📖 My Entries</button>
+    <button onclick="exportBook()">📤 Export Book</button>
+
+    <div id="form" style="display:none; margin-top:30px;">
+        <input type="date" id="date"><br><br>
+        <textarea id="miracle" placeholder="Miracle today..." rows="3" style="width:80%;"></textarea><br><br>
+        <textarea id="gratitude" placeholder="Grateful for..." rows="3" style="width:80%;"></textarea><br><br>
+        <button onclick="save()">Save Entry</button>
     </div>
 
-    <!-- Thought of the Day -->
-    <div class="section">
-        <h2>💡 Thought of the Day</h2>
-        <p id="thought" style="font-style:italic; color:#1e5c2b; font-size:1.1em;"></p>
-    </div>
-
-    <!-- Audio -->
-    <div class="section">
-        <h2>🎧 Helpful Audio</h2>
-        <p><strong>The Four Agreements - Key Ideas</strong></p>
-        <audio controls>
-            <source src="https://www.youtube.com/embed/0z4x1J5o0zA" type="audio/mpeg">
-            Your browser does not support audio.
-        </audio>
-        
-        <p><strong>Letting Go & Presence</strong></p>
-        <audio controls>
-            <source src="https://www.youtube.com/embed/5q4t7p4f7zU" type="audio/mpeg">
-            Your browser does not support audio.
-        </audio>
-    </div>
-
-    <form id="entryForm" style="display:none;" class="section">
-        <label>Date</label>
-        <input type="date" id="date" required>
-        <label>What small miracle did I notice today?</label>
-        <textarea id="miracle" rows="3" placeholder="How did God show up today?"></textarea>
-        <label>What am I grateful for?</label>
-        <textarea id="gratitude" rows="3" placeholder="List 3 or more things..."></textarea>
-        <label>Reflection / Lesson</label>
-        <textarea id="reflection" rows="3" placeholder="What am I learning about presence, letting go, or faith?"></textarea>
-        <button type="button" onclick="saveEntry()" style="width:100%; margin-top:15px;">Save Entry</button>
-    </form>
-
-    <div id="entries" class="section"></div>
+    <div id="list"></div>
 
     <script>
-        const thoughts = [
-            "When you try to float, you sink. When you let go, you float.",
-            "The real miracle might be loving myself enough to finally be present.",
-            "Small miracles happen daily if we have eyes to see them.",
-            "You are not your thoughts. Sit with them gently.",
-            "Keep walking in faith. God answers needs."
-        ];
-        document.getElementById('thought').textContent = thoughts[Math.floor(Math.random() * thoughts.length)];
+        let entries = JSON.parse(localStorage.getItem("miracles")) || [];
 
-        let entries = JSON.parse(localStorage.getItem('miraclesEntries')) || [];
-
-        function showForm() {
-            document.getElementById('entryForm').style.display = 'block';
-            document.getElementById('entries').style.display = 'none';
-            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        function newEntry() {
+            document.getElementById("form").style.display = "block";
+            document.getElementById("list").innerHTML = "";
         }
 
-        function showEntries() {
-            document.getElementById('entryForm').style.display = 'none';
-            const container = document.getElementById('entries');
-            container.style.display = 'block';
-            container.innerHTML = '<h2>My Entries</h2>';
+        function save() {
+            const date = document.getElementById("date").value || new Date().toISOString().split("T")[0];
+            const miracle = document.getElementById("miracle").value;
+            const gratitude = document.getElementById("gratitude").value;
+            if (miracle || gratitude) {
+                entries.push({date, miracle, gratitude});
+                localStorage.setItem("miracles", JSON.stringify(entries));
+                alert("Saved!");
+                document.getElementById("form").style.display = "none";
+                viewEntries();
+            }
+        }
+
+        function viewEntries() {
+            document.getElementById("form").style.display = "none";
+            const list = document.getElementById("list");
+            list.innerHTML = "<h2>My Entries</h2>";
             if (entries.length === 0) {
-                container.innerHTML += '<p>No entries yet. Click "New Entry" to start.</p>';
+                list.innerHTML += "<p>No entries yet.</p>";
                 return;
             }
-            entries.sort((a,b) => new Date(b.date) - new Date(a.date));
-            entries.forEach((entry, i) => {
-                const div = document.createElement('div');
-                div.style = 'background:#f9f9f9;padding:20px;border-radius:15px;margin-bottom:15px;border-left:6px solid #2e7d32;';
-                div.innerHTML = `<strong>${entry.date}</strong><br><br><strong>Miracle:</strong> ${entry.miracle}<br><br><strong>Gratitude:</strong> ${entry.gratitude}<br><br><strong>Reflection:</strong> ${entry.reflection || '—'}<br><button onclick="deleteEntry(${i})" style="background:#c62828;margin-top:10px;">Delete</button>`;
-                container.appendChild(div);
+            entries.forEach((e, i) => {
+                const div = document.createElement("div");
+                div.innerHTML = `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="del(${i})">Delete</button><hr>`;
+                list.appendChild(div);
             });
         }
 
-        function saveEntry() {
-            const date = document.getElementById('date').value;
-            const miracle = document.getElementById('miracle').value.trim();
-            const gratitude = document.getElementById('gratitude').value.trim();
-            if (!date || !miracle || !gratitude) return alert("Please fill Date, Miracle, and Gratitude");
-            entries.push({date, miracle, gratitude, reflection: document.getElementById('reflection').value.trim()});
-            localStorage.setItem('miraclesEntries', JSON.stringify(entries));
-            alert("✅ Entry Saved!");
-            document.getElementById('entryForm').reset();
-            showEntries();
-        }
-
-        function deleteEntry(i) {
-            if (confirm("Delete this entry?")) {
+        function del(i) {
+            if (confirm("Delete?")) {
                 entries.splice(i, 1);
-                localStorage.setItem('miraclesEntries', JSON.stringify(entries));
-                showEntries();
+                localStorage.setItem("miracles", JSON.stringify(entries));
+                viewEntries();
             }
         }
 
         function exportBook() {
-            if (entries.length === 0) return alert("Add some entries first!");
-            let html = `<h1 style="text-align:center;">Book of Miracles</h1><p style="text-align:center;">${new Date().getFullYear()} Gratitude Journey</p><hr>`;
-            entries.sort((a,b) => new Date(a.date) - new Date(b.date));
-            entries.forEach(e => {
-                html += `<h2>${e.date}</h2><p><strong>Miracle:</strong> ${e.miracle}</p><p><strong>Gratitude:</strong> ${e.gratitude}</p><p><strong>Reflection:</strong> ${e.reflection || '—'}</p><hr>`;
-            });
-            const blob = new Blob([html], {type: 'text/html'});
-            const a = document.createElement('a');
+            if (entries.length === 0) return alert("No entries");
+            let text = "Book of Miracles\n\n";
+            entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGrateful: ${e.gratitude}\n\n`);
+            const blob = new Blob([text], {type: "text/plain"});
+            const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = 'My-Book-of-Miracles.html';
+            a.download = "My-Book-of-Miracles.txt";
             a.click();
         }
 
-        window.onload = showForm;
+        // Start with new entry form
+        window.onload = newEntry;
     </script>
 </body>
 </html>
