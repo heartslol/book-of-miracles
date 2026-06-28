@@ -1,68 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book of Miracles</title>
     <style>
-        body { font-family: Arial; text-align: center; padding: 20px; background: #f0f7f0; }
-        button { padding: 15px 25px; margin: 10px; font-size: 18px; background: #2e7d32; color: white; border: none; border-radius: 10px; }
-        button:hover { background: #1b5e20; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f7f0;
+            color: #333;
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+        }
+        button {
+            background: #2e7d32;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1b5e20;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
     <h1>📖 Book of Miracles</h1>
-    <p>Daily Gratitude Journal</p>
+    <p style="text-align:center;">Gratitude & Miracles Journal</p>
 
-    <button onclick="newEntry()">✍️ New Entry</button>
-    <button onclick="viewEntries()">📖 My Entries</button>
-    <button onclick="exportBook()">📤 Export Book</button>
-
-    <div id="form" style="display:none; margin-top:30px;">
-        <input type="date" id="date"><br><br>
-        <textarea id="miracle" placeholder="Miracle today..." rows="3" style="width:80%;"></textarea><br><br>
-        <textarea id="gratitude" placeholder="Grateful for..." rows="3" style="width:80%;"></textarea><br><br>
-        <button onclick="save()">Save Entry</button>
+    <div style="text-align:center; margin:20px 0;">
+        <button onclick="newEntry()">✍️ New Entry</button>
+        <button onclick="viewEntries()">📖 My Entries</button>
+        <button onclick="exportBook()">📤 Export Book</button>
     </div>
 
-    <div id="list"></div>
+    <div id="main"></div>
 
     <script>
         let entries = JSON.parse(localStorage.getItem("miracles")) || [];
 
         function newEntry() {
-            document.getElementById("form").style.display = "block";
-            document.getElementById("list").innerHTML = "";
+            document.getElementById("main").innerHTML = `
+                <div class="section">
+                    <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}"><br><br>
+                    <textarea id="miracle" placeholder="What small miracle did I notice today?"></textarea><br>
+                    <textarea id="gratitude" placeholder="What am I grateful for today?"></textarea><br>
+                    <button onclick="saveEntry()" style="width:100%;">Save Entry</button>
+                </div>
+            `;
         }
 
-        function save() {
-            const date = document.getElementById("date").value || new Date().toISOString().split("T")[0];
-            const miracle = document.getElementById("miracle").value;
-            const gratitude = document.getElementById("gratitude").value;
-            if (miracle || gratitude) {
+        function saveEntry() {
+            const date = document.getElementById("date").value;
+            const miracle = document.getElementById("miracle").value.trim();
+            const gratitude = document.getElementById("gratitude").value.trim();
+            if (miracle && gratitude) {
                 entries.push({date, miracle, gratitude});
                 localStorage.setItem("miracles", JSON.stringify(entries));
-                alert("Saved!");
-                document.getElementById("form").style.display = "none";
+                alert("✅ Entry Saved!");
                 viewEntries();
+            } else {
+                alert("Please fill in Miracle and Gratitude");
             }
         }
 
         function viewEntries() {
-            document.getElementById("form").style.display = "none";
-            const list = document.getElementById("list");
-            list.innerHTML = "<h2>My Entries</h2>";
+            let html = `<div class="section"><h2>My Entries</h2>`;
             if (entries.length === 0) {
-                list.innerHTML += "<p>No entries yet.</p>";
-                return;
+                html += `<p>No entries yet. Create a New Entry.</p>`;
+            } else {
+                entries.sort((a,b) => new Date(b.date) - new Date(a.date));
+                entries.forEach((e, i) => {
+                    html += `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="deleteEntry(${i})">Delete</button><hr>`;
+                });
             }
-            entries.forEach((e, i) => {
-                const div = document.createElement("div");
-                div.innerHTML = `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="del(${i})">Delete</button><hr>`;
-                list.appendChild(div);
-            });
+            html += `</div>`;
+            document.getElementById("main").innerHTML = html;
         }
 
-        function del(i) {
-            if (confirm("Delete?")) {
+        function deleteEntry(i) {
+            if (confirm("Delete this entry?")) {
                 entries.splice(i, 1);
                 localStorage.setItem("miracles", JSON.stringify(entries));
                 viewEntries();
@@ -70,7 +109,7 @@
         }
 
         function exportBook() {
-            if (entries.length === 0) return alert("No entries");
+            if (entries.length === 0) return alert("No entries yet");
             let text = "Book of Miracles\n\n";
             entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGrateful: ${e.gratitude}\n\n`);
             const blob = new Blob([text], {type: "text/plain"});
@@ -80,7 +119,7 @@
             a.click();
         }
 
-        // Start with new entry form
+        // Start the app
         window.onload = newEntry;
     </script>
 </body>
