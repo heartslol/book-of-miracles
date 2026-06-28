@@ -1,102 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book of Miracles</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f0f7f0; }
-        h1 { color: #2e7d32; text-align: center; }
-        button { padding: 15px 25px; margin: 10px; font-size: 18px; background: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .voice { background: #007bff; font-size: 20px; padding: 12px 20px; }
-        textarea { width: 100%; height: 100px; padding: 12px; font-size: 18px; margin: 10px 0; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book of Miracles</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1: #2b2127;
+      --bg2: #3a2e35;
+      --accent: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.75);
+      --tile-overlay: rgba(0,0,0,0.34);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      color:var(--accent);
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.02), transparent),
+                  linear-gradient(180deg, #2b2026 0%, #33252b 50%, #2a1f24 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:32px 20px 80px;
+    }
+
+    /* Top bar / header */
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:28px;
+    }
+
+    .brand {
+      text-align:center;
+      flex:1;
+    }
+
+    .brand h1{
+      margin:0;
+      font-family: 'Great Vibes', cursive;
+      font-size:64px;
+      letter-spacing:2px;
+      color:var(--accent);
+      line-height:0.9;
+      text-shadow: 0 6px 24px rgba(0,0,0,0.6);
+    }
+
+    nav {
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:flex-end;
+      min-width:220px;
+    }
+
+    nav a {
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      font-size:16px;
+      padding:8px 10px;
+      border-radius:6px;
+      transition: all .18s ease;
+    }
+
+    nav a:hover{
+      color:var(--accent);
+      background: rgba(255,255,255,0.03);
+      transform:translateY(-2px);
+    }
+
+    /* Action buttons row (below header) */
+    .actions {
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:26px;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      color:var(--accent);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding:12px 18px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+
+    .btn:hover{ transform: translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,0.6); }
+
+    .btn.voice { background: #1f6ed6; color:white; border:none; }
+
+    /* Main card area (form & gallery) */
+    #main {
+      margin-top:8px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.14));
+      border-radius:14px;
+      padding:22px;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+      color:var(--accent);
+    }
+
+    label {
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+      color:var(--muted);
+    }
+
+    input[type="date"], textarea, input[type="text"]{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border: none;
+      background: rgba(255,255,255,0.02);
+      color:var(--accent);
+      font-size:16px;
+      outline: none;
+      resize:vertical;
+      box-sizing:border-box;
+    }
+
+    textarea { min-height:100px; }
+
+    /* Gallery grid */
+    .gallery {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap:20px;
+      margin-top:18px;
+      align-items:start;
+    }
+
+    .tile {
+      position:relative;
+      height:140px;
+      border-radius:10px;
+      overflow:hidden;
+      background-size:cover;
+      background-position:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: transform .22s ease, box-shadow .22s ease;
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .tile::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.55) 100%);
+      pointer-events:none;
+    }
+
+    .tile .meta {
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      z-index:2;
+      color:white;
+    }
+
+    .tile .title {
+      font-weight:700;
+      font-size:16px;
+      text-shadow:0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    .tile .subtitle {
+      font-size:13px;
+      opacity:0.95;
+      margin-top:6px;
+      color:rgba(255,255,255,0.9);
+    }
+
+    .tile .delete {
+      position:absolute;
+      top:8px;
+      right:8px;
+      z-index:3;
+      background: rgba(0,0,0,0.4);
+      border:none;
+      color:white;
+      padding:6px 8px;
+      border-radius:6px;
+      font-size:13px;
+      display:none;
+    }
+
+    .tile:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
+    .tile:hover .delete{ display:block; }
+
+    /* Empty state */
+    .empty {
+      text-align:center;
+      padding:40px;
+      color:rgba(255,255,255,0.7);
+    }
+
+    /* Footer */
+    footer {
+      margin-top:42px;
+      text-align:center;
+      color:rgba(255,255,255,0.55);
+      font-size:13px;
+      opacity:0.9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width:640px){
+      .brand h1{ font-size:44px; }
+      .gallery { grid-template-columns: repeat(2, 1fr); gap:12px; }
+      .tile{ height:120px; }
+    }
+  </style>
 </head>
 <body>
-    <h1>📖 Book of Miracles</h1>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>Book of Miracles</h1>
+      </div>
 
-    <div style="text-align:center;">
-        <button onclick="newEntry()">New Entry</button>
-        <button onclick="viewEntries()">My Entries</button>
-        <button onclick="exportBook()">Export Book</button>
+      <nav aria-label="Main navigation">
+        <a href="#" onclick="newEntry();return false;">Home</a>
+        <a href="#" onclick="viewEntries();return false;">Gallery</a>
+        <a href="#" onclick="about();return false;">About</a>
+        <a href="#" onclick="contact();return false;">Contact</a>
+      </nav>
+    </header>
+
+    <div class="actions">
+      <button class="btn" onclick="newEntry()">New Entry</button>
+      <button class="btn" onclick="viewEntries()">My Entries</button>
+      <button class="btn" onclick="exportBook()">Export Book</button>
     </div>
 
     <div id="main"></div>
 
-    <script>
-        let entries = JSON.parse(localStorage.getItem("miracles")) || [];
+    <footer>
+      © <span id="year"></span> Book of Miracles. All rights reserved.
+    </footer>
+  </div>
 
-        function newEntry() {
-            document.getElementById("main").innerHTML = `
-                <div style="background:white;padding:25px;border-radius:12px;margin:20px 0;">
-                    <input type="date" id="date" value="${new Date().toISOString().split('T')[0]}" style="width:100%;padding:10px;"><br><br>
-                    <label>Miracle Today</label>
-                    <textarea id="miracle" placeholder="Type or speak..."></textarea>
-                    <button class="voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button><br><br>
-                    <label>Gratitude</label>
-                    <textarea id="gratitude" placeholder="Type or speak..."></textarea>
-                    <button class="voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button><br><br>
-                    <button onclick="saveEntry()" style="width:100%;">Save Entry</button>
-                </div>
-            `;
-        }
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-        function speakToText(fieldId) {
-            if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-                alert("Voice to text works best in Chrome on your phone or computer.");
-                return;
-            }
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.onresult = (event) => {
-                document.getElementById(fieldId).value = event.results[0][0].transcript;
-            };
-            recognition.start();
-        }
+    let entries = JSON.parse(localStorage.getItem("miracles")) || [];
 
-        function saveEntry() {
-            const date = document.getElementById("date").value;
-            const miracle = document.getElementById("miracle").value.trim();
-            const gratitude = document.getElementById("gratitude").value.trim();
-            if (miracle || gratitude) {
-                entries.push({date, miracle, gratitude});
-                localStorage.setItem("miracles", JSON.stringify(entries));
-                alert("Saved!");
-                viewEntries();
-            }
-        }
+    function about(){
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <h2 style="margin-top:0;">About</h2>
+          <p style="color:var(--muted);line-height:1.6;">
+            Book of Miracles is a personal place to collect daily miracles and gratitude.
+            Use "New Entry" to add a memory, "My Entries" to browse them in a gallery, and Export to download a text copy.
+          </p>
+        </div>
+      `;
+    }
 
-        function viewEntries() {
-            let html = `<div style="background:white;padding:25px;border-radius:12px;margin:20px 0;"><h2>My Entries</h2>`;
-            if (entries.length === 0) html += "<p>No entries yet.</p>";
-            else {
-                entries.sort((a,b) => new Date(b.date) - new Date(a.date));
-                entries.forEach((e, i) => {
-                    html += `<p><strong>${e.date}</strong><br>Miracle: ${e.miracle}<br>Grateful: ${e.gratitude}</p><button onclick="deleteEntry(${i})">Delete</button><hr>`;
-                });
-            }
-            html += `</div>`;
-            document.getElementById("main").innerHTML = html;
-        }
+    function contact(){
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <h2 style="margin-top:0;">Contact</h2>
+          <p style="color:var(--muted);line-height:1.6;">This is a static demo. To get in touch, modify the source or add your own contact link here.</p>
+        </div>
+      `;
+    }
 
-        function deleteEntry(i) {
-            if (confirm("Delete?")) {
-                entries.splice(i, 1);
-                localStorage.setItem("miracles", JSON.stringify(entries));
-                viewEntries();
-            }
-        }
+    function newEntry() {
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <label for="date">Date</label>
+          <input id="date" type="date" value="${new Date().toISOString().split('T')[0]}">
 
-        function exportBook() {
-            if (entries.length === 0) return alert("No entries");
-            let text = "Book of Miracles\n\n";
-            entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\n\n`);
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
-            a.download = "My-Book-of-Miracles.txt";
-            a.click();
-        }
+          <label for="miracle" style="margin-top:12px;">Miracle Today</label>
+          <textarea id="miracle" placeholder="Type or speak..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button>
+            <button class="btn" onclick="document.getElementById('miracle').value=''">Clear</button>
+          </div>
 
-        window.onload = newEntry;
-    </script>
+          <label for="gratitude" style="margin-top:14px;">Gratitude</label>
+          <textarea id="gratitude" placeholder="Type or speak..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button>
+            <button class="btn" onclick="document.getElementById('gratitude').value=''">Clear</button>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:12px;">
+            <button class="btn" style="flex:1" onclick="saveEntry()">Save Entry</button>
+            <button class="btn" style="flex:1" onclick="viewEntries()">View Gallery</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function speakToText(fieldId) {
+      if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        alert("Voice to text works best in Chrome on your phone or computer.");
+        return;
+      }
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event) => {
+        document.getElementById(fieldId).value = event.results[0][0].transcript;
+      };
+      recognition.onerror = () => {
+        alert("Voice recognition error. Try again or type your entry.");
+      };
+      recognition.start();
+    }
+
+    function saveEntry() {
+      const date = document.getElementById("date").value;
+      const miracle = document.getElementById("miracle").value.trim();
+      const gratitude = document.getElementById("gratitude").value.trim();
+      if (!(miracle || gratitude)) {
+        alert("Add a Miracle or Gratitude before saving.");
+        return;
+      }
+      // push to top
+      entries.unshift({date, miracle, gratitude});
+      localStorage.setItem("miracles", JSON.stringify(entries));
+      alert("Saved!");
+      viewEntries();
+    }
+
+    function viewEntries() {
+      let html = `<div class="card"><h2 style="margin-top:0;">My Entries</h2>`;
+
+      if (entries.length === 0) {
+        html += `<div class="empty" style="padding:36px;">No entries yet — create your first miracle.</div></div>`;
+        document.getElementById("main").innerHTML = html;
+        return;
+      }
+
+      html += `<div class="gallery">`;
+      // entries are already most-recent-first
+      entries.forEach((e, i) => {
+        // Use a soft placeholder background from picsum; you can replace with user image later
+        const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-' + i)}`;
+        const safeTitle = escapeHtml(truncate(e.miracle || e.gratitude || "A small miracle", 40));
+        const safeSubtitle = escapeHtml(truncate(e.gratitude || e.miracle || "", 80));
+        html += `
+          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
+            <button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button>
+            <div class="meta" onclick="showDetail(${i})">
+              <div class="title">${safeTitle}</div>
+              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+      document.getElementById("main").innerHTML = html;
+    }
+
+    function truncate(str, len){
+      if(!str) return "";
+      return str.length > len ? str.slice(0,len-1)+'…' : str;
+    }
+
+    function escapeHtml(s){
+      if(!s) return "";
+      return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
+    }
+
+    function showDetail(i){
+      const e = entries[i];
+      if(!e) return;
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <div>
+              <h2 style="margin:0 0 6px 0;">${escapeHtml(e.miracle || 'A quiet miracle')}</h2>
+              <div style="color:var(--muted);font-size:14px">${e.date}</div>
+            </div>
+            <div>
+              <button class="btn" onclick="viewEntries()">Back</button>
+              <button class="btn" style="margin-left:8px;background:#c84d4d;color:white;border:none;" onclick="deleteEntry(${i})">Delete</button>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;color:var(--muted);line-height:1.6;">
+            <h3 style="margin:0 0 8px 0;">Gratitude</h3>
+            <p style="margin:0 0 16px 0;">${escapeHtml(e.gratitude || '')}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function deleteEntry(i) {
+      if (!confirm("Delete this entry?")) return;
+      entries.splice(i, 1);
+      localStorage.setItem("miracles", JSON.stringify(entries));
+      viewEntries();
+    }
+
+    function exportBook() {
+      if (entries.length === 0) return alert("No entries");
+      let text = "Book of Miracles\n\n";
+      entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\n\n`);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
+      a.download = "My-Book-of-Miracles.txt";
+      a.click();
+    }
+
+    // Initialize
+    window.onload = function(){
+      // If there are entries show gallery first, else new entry
+      if(entries.length) viewEntries();
+      else newEntry();
+    };
+  </script>
 </body>
 </html>
