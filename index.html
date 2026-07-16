@@ -34,7 +34,6 @@
       padding:32px 20px 80px;
     }
 
-    /* Top bar / header */
     header{
       display:flex;
       align-items:center;
@@ -91,7 +90,6 @@
       font-size:14px;
     }
 
-    /* Action buttons row (below header) */
     .actions {
       display:flex;
       gap:12px;
@@ -118,7 +116,6 @@
 
     .btn.logout { background: rgba(200,77,77,0.8); color:white; border:none; }
 
-    /* Main card area (form & gallery) */
     #main {
       margin-top:8px;
     }
@@ -211,7 +208,6 @@
       display:block;
     }
 
-    /* Gallery grid */
     .gallery {
       display:grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -280,14 +276,12 @@
     .tile:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
     .tile:hover .delete{ display:block; }
 
-    /* Empty state */
     .empty {
       text-align:center;
       padding:40px;
       color:rgba(255,255,255,0.7);
     }
 
-    /* Footer */
     footer {
       margin-top:42px;
       text-align:center;
@@ -296,7 +290,6 @@
       opacity:0.9;
     }
 
-    /* AHA badge */
     .badge-aha {
       display:inline-block;
       background: rgba(200,77,77,0.95);
@@ -308,7 +301,6 @@
       vertical-align:middle;
     }
 
-    /* Challenge section styling */
     .challenge-content {
       color:var(--muted);
       line-height:1.8;
@@ -354,7 +346,6 @@
       margin-top:12px;
     }
 
-    /* Responsive adjustments */
     @media (max-width:640px){
       header{
         flex-direction:column;
@@ -444,15 +435,11 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-
     let currentUser = null;
     let entries = [];
-
-    // Simple in-browser user system (uses localStorage)
     let users = JSON.parse(localStorage.getItem("users")) || {};
 
     function hashPassword(pwd) {
-      // Simple hash for demo (NOT secure for production - use backend auth!)
       let hash = 0;
       for (let i = 0; i < pwd.length; i++) {
         const char = pwd.charCodeAt(i);
@@ -469,12 +456,10 @@
         <div class="auth-form">
           <div class="card">
             <h2>Lens of Love</h2>
-            
             <div class="auth-tabs">
               <button class="active" onclick="switchAuthTab('login')">Login</button>
               <button onclick="switchAuthTab('signup')">Sign Up</button>
             </div>
-
             <div id="login" class="form-group active">
               <h3 style="margin-top:0;font-size:18px;">Welcome Back</h3>
               <div id="loginError" class="error" style="display:none;"></div>
@@ -484,7 +469,6 @@
               <input id="loginPassword" type="password" placeholder="••••••••">
               <button class="btn" style="width:100%;margin-top:12px;" onclick="doLogin()">Login</button>
             </div>
-
             <div id="signup" class="form-group">
               <h3 style="margin-top:0;font-size:18px;">Create Account</h3>
               <div id="signupError" class="error" style="display:none;"></div>
@@ -497,9 +481,8 @@
               <input id="signupConfirm" type="password" placeholder="••••••••">
               <button class="btn" style="width:100%;margin-top:12px;" onclick="doSignup()">Create Account</button>
             </div>
-
             <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:var(--muted);line-height:1.5;">
-              <strong>⚠️ Demo Privacy Note:</strong> This app stores data locally in your browser. For real production use, deploy with a secure backend server and HTTPS encryption.
+              <strong>⚠️ Demo Privacy Note:</strong> This app stores data locally in your browser.
             </div>
           </div>
         </div>
@@ -511,7 +494,6 @@
       document.querySelectorAll(".auth-tabs button").forEach(el => el.classList.remove("active"));
       document.getElementById(tab).classList.add("active");
       document.querySelector(`[onclick="switchAuthTab('${tab}')"]`).classList.add("active");
-      // Clear errors
       document.getElementById("loginError").style.display = "none";
       document.getElementById("signupError").style.display = "none";
       document.getElementById("signupSuccess").style.display = "none";
@@ -521,19 +503,16 @@
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
       const errorDiv = document.getElementById("loginError");
-      
       if (!email || !password) {
         errorDiv.textContent = "Email and password required";
         errorDiv.style.display = "block";
         return;
       }
-
       if (!users[email] || users[email].password !== hashPassword(password)) {
         errorDiv.textContent = "Invalid email or password";
         errorDiv.style.display = "block";
         return;
       }
-
       currentUser = email;
       localStorage.setItem("currentUser", email);
       loadUserEntries();
@@ -546,39 +525,32 @@
       const confirm = document.getElementById("signupConfirm").value;
       const errorDiv = document.getElementById("signupError");
       const successDiv = document.getElementById("signupSuccess");
-
       errorDiv.style.display = "none";
       successDiv.style.display = "none";
-
       if (!email || !password) {
         errorDiv.textContent = "Email and password required";
         errorDiv.style.display = "block";
         return;
       }
-
       if (password.length < 6) {
         errorDiv.textContent = "Password must be at least 6 characters";
         errorDiv.style.display = "block";
         return;
       }
-
       if (password !== confirm) {
         errorDiv.textContent = "Passwords do not match";
         errorDiv.style.display = "block";
         return;
       }
-
       if (users[email]) {
         errorDiv.textContent = "This email is already registered";
         errorDiv.style.display = "block";
         return;
       }
-
       users[email] = { password: hashPassword(password), entries: [] };
       localStorage.setItem("users", JSON.stringify(users));
       successDiv.textContent = "Account created! Logging in...";
       successDiv.style.display = "block";
-      
       setTimeout(() => {
         currentUser = email;
         localStorage.setItem("currentUser", email);
@@ -605,7 +577,7 @@
     function showApp() {
       document.getElementById("header").style.display = "flex";
       document.getElementById("actions").style.display = "flex";
-      document.getElementById("userDisplay").textContent = `Logged in as: ${currentUser}`;
+      document.getElementById("userDisplay").textContent = "Logged in as: " + currentUser;
       if (entries.length) viewEntries();
       else newEntry();
     }
@@ -620,28 +592,11 @@
     }
 
     function about(){
-      document.getElementById("main").innerHTML = `
-        <div class="card">
-          <h2 style="margin-top:0;">About</h2>
-          <p style="color:var(--muted);line-height:1.6;">
-            Lens of Love is a personal place to collect daily miracles, gratitude, and aha moments (perspective).
-            Your entries are private and stored only in your account. Use "New Entry" to add a memory, "My Entries" to browse them in a gallery, and Export to download a text copy.
-          </p>
-        </div>
-      `;
+      document.getElementById("main").innerHTML = `<div class="card"><h2 style="margin-top:0;">About</h2><p style="color:var(--muted);line-height:1.6;">Lens of Love is a personal place to collect daily miracles, gratitude, and aha moments (perspective). Your entries are private and stored only in your account.</p></div>`;
     }
 
     function contact(){
-      document.getElementById("main").innerHTML = `
-        <div class="card">
-          <h2 style="margin-top:0;">Contact</h2>
-          <p style="color:var(--muted);line-height:1.6;">
-            Paul Jones<br>
-            Phone: <a href="tel:+14352159314" style="color:var(--accent);text-decoration:underline;">435-215-9314</a><br>
-            Email: <a href="mailto:heartslenseoflove@gmail.com" style="color:var(--accent);text-decoration:underline;">heartslenseoflove@gmail.com</a>
-          </p>
-        </div>
-      `;
+      document.getElementById("main").innerHTML = `<div class="card"><h2 style="margin-top:0;">Contact</h2><p style="color:var(--muted);line-height:1.6;">Paul Jones<br>Phone: <a href="tel:+14352159314" style="color:var(--accent);text-decoration:underline;">435-215-9314</a><br>Email: <a href="mailto:heartslenseoflove@gmail.com" style="color:var(--accent);text-decoration:underline;">heartslenseoflove@gmail.com</a></p></div>`;
     }
 
     function iLoveMyself(){
@@ -650,28 +605,20 @@
           <h2 style="margin-top:0;">I Love Myself Challenge</h2>
           <div class="challenge-content">
             <p><strong>What if you don't love yourself or even like yourself?</strong> Just remain open to the possibility of loving yourself. The rest is easy.</p>
-
             <h3>Mental Loop</h3>
             <p>A thought loop is a pathway laid down by constant use. With enough time and intensity, if you repeat it again and again, you start to create a mental river that controls you. You believe it is automatic and the reality you live in, but really it is just a mental loop you have repeated too many times.</p>
-            
             <p>You can reverse this process. You can create your own focused mental loops. Repeat, <strong>"I love myself"</strong> again and again and again. Lay the pathway for that loop to run over and over. Eventually, it will take hold whether you believe it or not. You need to create a groove that is deeper than those unhappy and unhelpful grooves you've laid down over the years.</p>
-
             <h3>Meditation</h3>
             <p>Each day, listen to a 5 – 7 minute piece of music that you like and think, <strong>"I love myself."</strong> Visualize that the universe is raining down white light into your head and body.</p>
-            
             <p><strong>Pattern:</strong> Inhale &gt; Think "I love myself" &gt; Exhale &gt; Let out whatever thoughts you have.</p>
-            
             <p>What if you don't believe it? Doesn't matter. Your role is to lay down the pathway for doing it. Connect the neurons and your body and mind will respond automatically.</p>
-
             <p style="margin-top:20px;font-style:italic;color:var(--accent);">As you love yourself, life loves you back.</p>
-
             <div class="vow-section">
               <label>Your Personal Vow</label>
               <p style="margin-bottom:12px;color:var(--muted);">Date: <input type="date" id="vowDate" style="width:200px;"></p>
               <p style="margin-bottom:12px;color:var(--muted);">This day, I <input type="text" id="vowName" placeholder="[Your Name]" style="width:200px;"> vow to myself to love myself, to treat myself as someone I love truly and deeply – in my thoughts, my actions, the choices I make, the experiences I have, each moment I am conscious, I make the decision <strong>I LOVE MYSELF.</strong></p>
               <div class="vow-signature">✨ This vow is sacred and personal. Return to it whenever you need to remember.</div>
             </div>
-
             <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
               <button class="btn" onclick="saveVow()">Save My Vow</button>
               <button class="btn" onclick="viewEntries()">Back to Gallery</button>
@@ -685,8 +632,7 @@
 
     function saveVow() {
       const vowDate = document.getElementById("vowDate").value;
-      const vowName = document.getElementById("vowName").value.trim() || "I";
-      alert(`Thank you for taking this vow on ${vowDate}. Remember: I love myself. 💫`);
+      alert("Thank you for taking this vow on " + vowDate + ". Remember: I love myself. 💫");
     }
 
     function newEntry() {
@@ -694,28 +640,24 @@
         <div class="card">
           <label for="date">Date</label>
           <input id="date" type="date" value="${new Date().toISOString().split('T')[0]}">
-
           <label for="miracle" style="margin-top:12px;">Miracle Today</label>
           <textarea id="miracle" placeholder="Type or speak..."></textarea>
           <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button>
             <button class="btn" onclick="document.getElementById('miracle').value=''">Clear</button>
           </div>
-
           <label for="gratitude" style="margin-top:14px;">Gratitude</label>
           <textarea id="gratitude" placeholder="Type or speak..."></textarea>
           <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button>
             <button class="btn" onclick="document.getElementById('gratitude').value=''">Clear</button>
           </div>
-
           <label for="aha" style="margin-top:14px;">Aha Moment (Perspective)</label>
           <textarea id="aha" placeholder="A shift in perspective, insight, or 'aha'..."></textarea>
           <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn voice" onclick="speakToText('aha')">🎤 Speak Aha</button>
             <button class="btn" onclick="document.getElementById('aha').value=''">Clear</button>
           </div>
-
           <div style="margin-top:18px;display:flex;gap:12px;">
             <button class="btn" style="flex:1" onclick="saveEntry()">Save Entry</button>
             <button class="btn" style="flex:1" onclick="viewEntries()">View Gallery</button>
@@ -759,27 +701,17 @@
 
     function viewEntries() {
       let html = `<div class="card"><h2 style="margin-top:0;">My Entries</h2>`;
-
       if (entries.length === 0) {
         html += `<div class="empty" style="padding:36px;">No entries yet — create your first moment.</div></div>`;
         document.getElementById("main").innerHTML = html;
         return;
       }
-
       html += `<div class="gallery">`;
       entries.forEach((e, i) => {
         const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-' + i)}`;
         const safeTitle = escapeHtml(truncate(e.miracle || e.aha || e.gratitude || "A small moment", 40));
         const safeSubtitle = escapeHtml(truncate(e.aha || e.gratitude || e.miracle || "", 80));
-        html += `
-          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
-            <button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button>
-            <div class="meta" onclick="showDetail(${i})">
-              <div class="title">${safeTitle}${e.aha ? '<span class="badge-aha">AHA</span>' : ''}</div>
-              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
-            </div>
-          </div>
-        `;
+        html += `<div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}"><button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button><div class="meta" onclick="showDetail(${i})"><div class="title">${safeTitle}${e.aha ? '<span class="badge-aha">AHA</span>' : ''}</div><div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div></div></div>`;
       });
       html += `</div></div>`;
       document.getElementById("main").innerHTML = html;
@@ -788,28 +720,18 @@
     function viewAhaEntries() {
       let ahaEntries = entries.filter(e => (e.aha || '').trim());
       let html = `<div class="card"><h2 style="margin-top:0;">AHA Moments (Perspective)</h2>`;
-
       if (ahaEntries.length === 0) {
         html += `<div class="empty" style="padding:36px;">No AHA moments yet — create one with New Entry.</div></div>`;
         document.getElementById("main").innerHTML = html;
         return;
       }
-
       html += `<div class="gallery">`;
       ahaEntries.forEach((e, idx) => {
         const originalIndex = entries.indexOf(e);
         const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-aha-' + idx)}`;
         const safeTitle = escapeHtml(truncate(e.aha || e.miracle || e.gratitude || "An insight", 40));
         const safeSubtitle = escapeHtml(truncate(e.miracle || e.gratitude || '', 80));
-        html += `
-          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
-            <button class="delete" onclick="deleteEntry(${originalIndex});event.stopPropagation();">Delete</button>
-            <div class="meta" onclick="showDetail(${originalIndex})">
-              <div class="title">${safeTitle}<span class="badge-aha">AHA</span></div>
-              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
-            </div>
-          </div>
-        `;
+        html += `<div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}"><button class="delete" onclick="deleteEntry(${originalIndex});event.stopPropagation();">Delete</button><div class="meta" onclick="showDetail(${originalIndex})"><div class="title">${safeTitle}<span class="badge-aha">AHA</span></div><div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div></div></div>`;
       });
       html += `</div></div>`;
       document.getElementById("main").innerHTML = html;
@@ -822,7 +744,7 @@
 
     function escapeHtml(s){
       if(!s) return "";
-      return String(s).replace(/[&<>\"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m];});
+      return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
     }
 
     function showDetail(i){
@@ -840,11 +762,9 @@
               <button class="btn" style="margin-left:8px;background:#c84d4d;color:white;border:none;" onclick="deleteEntry(${i})">Delete</button>
             </div>
           </div>
-
           <div style="margin-top:16px;color:var(--muted);line-height:1.6;">
             <h3 style="margin:0 0 8px 0;">Gratitude</h3>
             <p style="margin:0 0 16px 0;">${escapeHtml(e.gratitude || '')}</p>
-
             <h3 style="margin:0 0 8px 0;">Aha Moment (Perspective)</h3>
             <p style="margin:0 0 16px 0;">${escapeHtml(e.aha || '')}</p>
           </div>
@@ -869,7 +789,6 @@
       a.click();
     }
 
-    // Initialize
     window.onload = function(){
       const savedUser = localStorage.getItem("currentUser");
       if (savedUser && users[savedUser]) {
