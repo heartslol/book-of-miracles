@@ -1,5 +1,3 @@
-
-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -656,5 +654,232 @@ HTML
             <h3>Mental Loop</h3>
             <p>A thought loop is a pathway laid down by constant use. With enough time and intensity, if you repeat it again and again, you start to create a mental river that controls you. You believe it is automatic and the reality you live in, but really it is just a mental loop you have repeated too many times.</p>
             
-            <p>You can reverse this process. You can create your own focused mental loops. Repeat, <strong>"I love myself"</strong> again and again and again. Lay the pathway for that loop to run over and over. Eventually, it will take hold whether you believe it or not. You need`*
+            <p>You can reverse this process. You can create your own focused mental loops. Repeat, <strong>"I love myself"</strong> again and again and again. Lay the pathway for that loop to run over and over. Eventually, it will take hold whether you believe it or not. You need to create a groove that is deeper than those unhappy and unhelpful grooves you've laid down over the years.</p>
 
+            <h3>Meditation</h3>
+            <p>Each day, listen to a 5 – 7 minute piece of music that you like and think, <strong>"I love myself."</strong> Visualize that the universe is raining down white light into your head and body.</p>
+            
+            <p><strong>Pattern:</strong> Inhale &gt; Think "I love myself" &gt; Exhale &gt; Let out whatever thoughts you have.</p>
+            
+            <p>What if you don't believe it? Doesn't matter. Your role is to lay down the pathway for doing it. Connect the neurons and your body and mind will respond automatically.</p>
+
+            <p style="margin-top:20px;font-style:italic;color:var(--accent);">As you love yourself, life loves you back.</p>
+
+            <div class="vow-section">
+              <label>Your Personal Vow</label>
+              <p style="margin-bottom:12px;color:var(--muted);">Date: <input type="date" id="vowDate" style="width:200px;"></p>
+              <p style="margin-bottom:12px;color:var(--muted);">This day, I <input type="text" id="vowName" placeholder="[Your Name]" style="width:200px;"> vow to myself to love myself, to treat myself as someone I love truly and deeply – in my thoughts, my actions, the choices I make, the experiences I have, each moment I am conscious, I make the decision <strong>I LOVE MYSELF.</strong></p>
+              <div class="vow-signature">✨ This vow is sacred and personal. Return to it whenever you need to remember.</div>
+            </div>
+
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn" onclick="saveVow()">Save My Vow</button>
+              <button class="btn" onclick="viewEntries()">Back to Gallery</button>
+            </div>
+          </div>
+        </div>
+      `;
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById("vowDate").value = today;
+    }
+
+    function saveVow() {
+      const vowDate = document.getElementById("vowDate").value;
+      const vowName = document.getElementById("vowName").value.trim() || "I";
+      alert(`Thank you for taking this vow on ${vowDate}. Remember: I love myself. 💫`);
+    }
+
+    function newEntry() {
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <label for="date">Date</label>
+          <input id="date" type="date" value="${new Date().toISOString().split('T')[0]}">
+
+          <label for="miracle" style="margin-top:12px;">Miracle Today</label>
+          <textarea id="miracle" placeholder="Type or speak..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('miracle')">🎤 Speak Miracle</button>
+            <button class="btn" onclick="document.getElementById('miracle').value=''">Clear</button>
+          </div>
+
+          <label for="gratitude" style="margin-top:14px;">Gratitude</label>
+          <textarea id="gratitude" placeholder="Type or speak..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('gratitude')">🎤 Speak Gratitude</button>
+            <button class="btn" onclick="document.getElementById('gratitude').value=''">Clear</button>
+          </div>
+
+          <label for="aha" style="margin-top:14px;">Aha Moment (Perspective)</label>
+          <textarea id="aha" placeholder="A shift in perspective, insight, or 'aha'..."></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn voice" onclick="speakToText('aha')">🎤 Speak Aha</button>
+            <button class="btn" onclick="document.getElementById('aha').value=''">Clear</button>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:12px;">
+            <button class="btn" style="flex:1" onclick="saveEntry()">Save Entry</button>
+            <button class="btn" style="flex:1" onclick="viewEntries()">View Gallery</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function speakToText(fieldId) {
+      if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        alert("Voice to text works best in Chrome on your phone or computer.");
+        return;
+      }
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event) => {
+        document.getElementById(fieldId).value = event.results[0][0].transcript;
+      };
+      recognition.onerror = () => {
+        alert("Voice recognition error. Try again or type your entry.");
+      };
+      recognition.start();
+    }
+
+    function saveEntry() {
+      const date = document.getElementById("date").value;
+      const miracle = document.getElementById("miracle").value.trim();
+      const gratitude = document.getElementById("gratitude").value.trim();
+      const aha = document.getElementById("aha").value.trim();
+      if (!(miracle || gratitude || aha)) {
+        alert("Add a Miracle, Gratitude, or Aha moment before saving.");
+        return;
+      }
+      entries.unshift({date, miracle, gratitude, aha});
+      saveUserEntries();
+      alert("Entry saved successfully!");
+      viewEntries();
+    }
+
+    function viewEntries() {
+      let html = `<div class="card"><h2 style="margin-top:0;">My Entries</h2>`;
+
+      if (entries.length === 0) {
+        html += `<div class="empty" style="padding:36px;">No entries yet — create your first moment.</div></div>`;
+        document.getElementById("main").innerHTML = html;
+        return;
+      }
+
+      html += `<div class="gallery">`;
+      entries.forEach((e, i) => {
+        const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-' + i)}`;
+        const safeTitle = escapeHtml(truncate(e.miracle || e.aha || e.gratitude || "A small moment", 40));
+        const safeSubtitle = escapeHtml(truncate(e.aha || e.gratitude || e.miracle || "", 80));
+        html += `
+          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
+            <button class="delete" onclick="deleteEntry(${i});event.stopPropagation();">Delete</button>
+            <div class="meta" onclick="showDetail(${i})">
+              <div class="title">${safeTitle}${e.aha ? '<span class="badge-aha">AHA</span>' : ''}</div>
+              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+      document.getElementById("main").innerHTML = html;
+    }
+
+    function viewAhaEntries() {
+      let ahaEntries = entries.filter(e => (e.aha || '').trim());
+      let html = `<div class="card"><h2 style="margin-top:0;">AHA Moments (Perspective)</h2>`;
+
+      if (ahaEntries.length === 0) {
+        html += `<div class="empty" style="padding:36px;">No AHA moments yet — create one with New Entry.</div></div>`;
+        document.getElementById("main").innerHTML = html;
+        return;
+      }
+
+      html += `<div class="gallery">`;
+      ahaEntries.forEach((e, idx) => {
+        const originalIndex = entries.indexOf(e);
+        const img = `https://picsum.photos/600/360?random=${encodeURIComponent(e.date + '-aha-' + idx)}`;
+        const safeTitle = escapeHtml(truncate(e.aha || e.miracle || e.gratitude || "An insight", 40));
+        const safeSubtitle = escapeHtml(truncate(e.miracle || e.gratitude || '', 80));
+        html += `
+          <div class="tile" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.18)), url('${img}');" title="${safeTitle}">
+            <button class="delete" onclick="deleteEntry(${originalIndex});event.stopPropagation();">Delete</button>
+            <div class="meta" onclick="showDetail(${originalIndex})">
+              <div class="title">${safeTitle}<span class="badge-aha">AHA</span></div>
+              <div class="subtitle">${e.date}${safeSubtitle ? ' · ' + safeSubtitle : ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+      document.getElementById("main").innerHTML = html;
+    }
+
+    function truncate(str, len){
+      if(!str) return "";
+      return str.length > len ? str.slice(0,len-1)+'…' : str;
+    }
+
+    function escapeHtml(s){
+      if(!s) return "";
+      return String(s).replace(/[&<>\"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m];});
+    }
+
+    function showDetail(i){
+      const e = entries[i];
+      if(!e) return;
+      document.getElementById("main").innerHTML = `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <div>
+              <h2 style="margin:0 0 6px 0;">${escapeHtml(e.miracle || 'A quiet moment')}</h2>
+              <div style="color:var(--muted);font-size:14px">${e.date}${e.aha ? ' · AHA' : ''}</div>
+            </div>
+            <div>
+              <button class="btn" onclick="viewEntries()">Back</button>
+              <button class="btn" style="margin-left:8px;background:#c84d4d;color:white;border:none;" onclick="deleteEntry(${i})">Delete</button>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;color:var(--muted);line-height:1.6;">
+            <h3 style="margin:0 0 8px 0;">Gratitude</h3>
+            <p style="margin:0 0 16px 0;">${escapeHtml(e.gratitude || '')}</p>
+
+            <h3 style="margin:0 0 8px 0;">Aha Moment (Perspective)</h3>
+            <p style="margin:0 0 16px 0;">${escapeHtml(e.aha || '')}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function deleteEntry(i) {
+      if (!confirm("Delete this entry?")) return;
+      entries.splice(i, 1);
+      saveUserEntries();
+      viewEntries();
+    }
+
+    function exportBook() {
+      if (entries.length === 0) return alert("No entries");
+      let text = "Lens of Love\n\n";
+      entries.forEach(e => text += `${e.date}\nMiracle: ${e.miracle}\nGratitude: ${e.gratitude}\nAha: ${e.aha}\n\n`);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], {type: "text/plain"}));
+      a.download = "My-Lens-of-Love.txt";
+      a.click();
+    }
+
+    // Initialize
+    window.onload = function(){
+      const savedUser = localStorage.getItem("currentUser");
+      if (savedUser && users[savedUser]) {
+        currentUser = savedUser;
+        loadUserEntries();
+        showApp();
+      } else {
+        showAuth();
+      }
+    };
+  </script>
+</body>
+</html>
